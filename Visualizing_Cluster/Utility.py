@@ -14,7 +14,7 @@ import requests
 def get_entries(path_model_th_cls):
     # GitHub repository information
     owner = 'SDM-TIB'
-    repo = 'CoyPU_communities_demo'
+    repo = 'CoyPU_demo_LDM'
     # GitHub API URL to list the contents of the directory
     url = f'https://api.github.com/repos/{owner}/{repo}/contents/{path_model_th_cls}'
 
@@ -36,7 +36,7 @@ def select_cluster(country, path_model_th_cls):
     entries = get_entries(path_model_th_cls)
     country_entries = []
     for name in entries:
-        content = 'https://raw.githubusercontent.com/SDM-TIB/CoyPU_communities_demo/main/'
+        content = 'https://raw.githubusercontent.com/SDM-TIB/CoyPU_demo_LDM/main/'
         cls = pd.read_csv(content+path_model_th_cls + '/' + name, delimiter="\t", header=None)
         cls.columns = ['Country', 'Indicator', 'category', 'Cost']
         if country in cls.Country.to_list():
@@ -58,7 +58,7 @@ def adding_prediction(name, cls, prediction):
     return cls
 
 def load_cluster(path_model_th_cls, name, prediction, replacement_map):
-    content = 'https://raw.githubusercontent.com/SDM-TIB/CoyPU_communities_demo/main/'
+    content = 'https://raw.githubusercontent.com/SDM-TIB/CoyPU_demo_LDM/main/'
     cls = pd.read_csv(content + path_model_th_cls + '/' + name, delimiter="\t", header=None)
     cls.columns = ['Country', 'Indicator', 'category', 'Cost']
     cls = adding_prediction(name, cls, prediction)
