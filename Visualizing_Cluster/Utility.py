@@ -31,12 +31,11 @@ def get_entries(path_model_th_cls):
         return entries
     return []
 
-def select_cluster(country, path_model_th_cls):
+def select_cluster(country, path_model_th_cls, content):
     # entries = os.listdir(path_model_th_cls)
     entries = get_entries(path_model_th_cls)
     country_entries = []
     for name in entries:
-        content = 'https://raw.githubusercontent.com/SDM-TIB/CoyPU_demo_LDM/main/'
         cls = pd.read_csv(content+path_model_th_cls + '/' + name, delimiter="\t", header=None)
         cls.columns = ['Country', 'Indicator', 'category', 'Cost']
         if country in cls.Country.to_list():
@@ -57,16 +56,15 @@ def adding_prediction(name, cls, prediction):
                                    prediction['weight'][ind]]
     return cls
 
-def load_cluster(path_model_th_cls, name, prediction, replacement_map):
-    content = 'https://raw.githubusercontent.com/SDM-TIB/CoyPU_demo_LDM/main/'
+def load_cluster(path_model_th_cls, name, prediction, replacement_map, content):
     cls = pd.read_csv(content + path_model_th_cls + '/' + name, delimiter="\t", header=None)
     cls.columns = ['Country', 'Indicator', 'category', 'Cost']
     cls = adding_prediction(name, cls, prediction)
     cls['Country'].replace(replacement_map, inplace=True)
     return cls
 
-def create_json_to_cytoscape(path_model_th_cls, name, prediction, replacement_map): # entity_type
-    rdf_graph = load_cluster(path_model_th_cls, name, prediction, replacement_map)
+def create_json_to_cytoscape(path_model_th_cls, name, prediction, replacement_map, content): # entity_type
+    rdf_graph = load_cluster(path_model_th_cls, name, prediction, replacement_map, content)
     graph_json = dict()
     graph_json['nodes'] = []
     graph_json['edges'] = []
@@ -115,10 +113,10 @@ def create_json_to_cytoscape(path_model_th_cls, name, prediction, replacement_ma
 
     return graph_json
 
-def create_graph_cytoscape(path_model_th_cls, name, prediction, replacement_map):
-    middle_vertex = create_json_to_cytoscape(path_model_th_cls, name, prediction, replacement_map)
+def create_graph_cytoscape(path_model_th_cls, name, prediction, replacement_map, content):
+    middle_vertex = create_json_to_cytoscape(path_model_th_cls, name, prediction, replacement_map, content)
     # load a style dictionary
-    with open("styles_prediction.json") as fi:
+    with open(content + 'Visualizing_Cluster/styles_prediction.json') as fi:
         s = json.load(fi)
     # Create the cytoscape graph widget
     cytoscapeobj = CytoscapeWidget()
