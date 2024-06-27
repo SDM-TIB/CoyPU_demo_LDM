@@ -116,8 +116,9 @@ def create_json_to_cytoscape(path_model_th_cls, name, prediction, replacement_ma
 def create_graph_cytoscape(path_model_th_cls, name, prediction, replacement_map, content):
     middle_vertex = create_json_to_cytoscape(path_model_th_cls, name, prediction, replacement_map, content)
     # load a style dictionary
-    with open(content + 'Visualizing_Cluster/styles_prediction.json') as fi:
-        s = json.load(fi)
+#     with open(content + 'Visualizing_Cluster/styles_prediction.json') as fi:
+#         s = json.load(fi)
+    s = download_json(content + 'Visualizing_Cluster/styles_prediction.json')
     # Create the cytoscape graph widget
     cytoscapeobj = CytoscapeWidget()
     cytoscapeobj.graph.add_graph_from_json(middle_vertex, directed=True, multiple_edges=True)  # , directed=True, input_data['elements']
@@ -125,5 +126,12 @@ def create_graph_cytoscape(path_model_th_cls, name, prediction, replacement_map,
     cytoscapeobj.set_style(s)
     cytoscapeobj.set_layout(name='breadthfirst', animate=True, nodeSpacing = 1)  # concentric,  breadthfirst, fcose, dagre, grid
     return cytoscapeobj
+
+def download_json(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to download JSON file: {response.status_code}")
 
 
