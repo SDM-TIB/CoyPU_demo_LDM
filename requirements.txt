@@ -1,0 +1,7 @@
+pandas
+ipycytoscape
+ipywidgets
+voila
+IPython
+matplotlib
+seaborn
